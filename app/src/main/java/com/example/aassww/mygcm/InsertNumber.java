@@ -2,11 +2,13 @@ package com.example.aassww.mygcm;
 
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
-
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.FirebaseInstanceIdService;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -15,25 +17,41 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 
-/**
- * Created by aassw on 2017-01-17.
- */
-public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
-
-    private static final String TAG = "MyFirebaseIIDService";
+public class InsertNumber extends AppCompatActivity {
 
     @Override
-    public void onTokenRefresh() {
-        String refreshedToken = FirebaseInstanceId.getInstance().getToken();
-        Log.d(TAG, "Refreshed token: " + refreshedToken);
-        insertToDatabase(refreshedToken);
-    }
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_insert_number);
 
-    private void insertToDatabase(String reg_id) {
+        Button insertButton = (Button) findViewById(R.id.insertButton);
+
+        insertButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendToDatabase();
+            }
+        });
+    }
+   public void sendToDatabase()
+   {
+       EditText editphone = (EditText)findViewById(R.id.editNumber);
+       EditText editmemo = (EditText)findViewById(R.id.editMemo);
+
+       String number = editphone.getText().toString();
+       String memo = editmemo.getText().toString();
+
+       insertToDatabase(number,memo);
+
+       Log.i("NUMBER",number);
+
+       finish();
+
+   }
+    private void insertToDatabase(String number, String memo) {
 
         class InsertData extends AsyncTask<String, Void, String> {
             ProgressDialog loading;
-
 
             @Override
             protected void onPreExecute() {
@@ -53,11 +71,12 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
 
                 try {
 
-                    String reg_id = (String) params[0];
+                    String num = (String) params[0];
+                    String memo = (String) params[1];
 
-                    String link = "http://tripjuvo.ivyro.net/fcm/register.php";
-                    String data = URLEncoder.encode("Token", "UTF-8") + "=" + URLEncoder.encode(reg_id, "UTF-8");
-                    Log.i("NotiRegistration",reg_id);
+                    String link = "http://tripjuvo.ivyro.net/fcm/insert_number.php";
+                    String data = URLEncoder.encode("number", "UTF-8") + "=" + URLEncoder.encode(num, "UTF-8");
+                    data += "&" + URLEncoder.encode("memo", "UTF-8") + "=" + URLEncoder.encode(memo, "UTF-8");
 
                     URL url = new URL(link);
                     URLConnection conn = url.openConnection();
@@ -80,19 +99,14 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
                     }
                     return sb.toString();
                 } catch (Exception e) {
-                    Log.i("LLLL1",e.getMessage());
+                    Log.i("LLLL",e.getMessage());
                     return new String("Exception: " + e.getMessage());
+
                 }
 
             }
-
         }
-
         InsertData task = new InsertData();
-        task.execute(reg_id);
-    }
-
-    private void sendRegistrationToServer(String token) {
-        Log.d(TAG, "send Server");
+        task.execute(number,memo);
     }
 }
