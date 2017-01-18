@@ -28,12 +28,14 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             Log.d(TAG, "Message data payload: " + remoteMessage.getData());
             String body = remoteMessage.getNotification().getBody();
             Log.d(TAG,"body = "+ body);
+
         }
 
         if (remoteMessage.getNotification() != null) {
             Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
             String body = remoteMessage.getNotification().getBody();
             Log.d(TAG,"body = "+ body);
+
         }
     }
 
