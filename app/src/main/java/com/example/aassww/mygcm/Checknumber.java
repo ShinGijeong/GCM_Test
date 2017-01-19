@@ -137,7 +137,7 @@ public class Checknumber extends AppCompatActivity {
             inputList();
         }
     }
-    void inputList()
+    public void inputList()
     {
         arrayAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_multiple_choice,arrayList);
         list = (ListView)findViewById(R.id.list);
