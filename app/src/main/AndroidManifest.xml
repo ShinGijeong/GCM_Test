@@ -28,7 +28,6 @@
         </service>
 
         <activity android:name=".Checknumber" />
-        <activity android:name=".InsertNumber"></activity>
     </application>
 
 </manifest>

@@ -2,13 +2,7 @@ package com.example.aassww.mygcm;
 
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -17,13 +11,16 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 
-public class InsertNumber {
+/**
+ * Created by aassw on 2017-01-19.
+ */
+public class removeNumber {
 
     public void sendToDatabase(String phone)
     {
-        insertToDatabase(phone);
+        deleteToDatabase(phone);
     }
-    private void insertToDatabase(String number) {
+    private void deleteToDatabase(String number) {
 
         class InsertData extends AsyncTask<String, Void, String> {
             ProgressDialog loading;
@@ -47,8 +44,8 @@ public class InsertNumber {
                 try {
 
                     String num = (String) params[0];
-
-                    String link = "http://tripjuvo.ivyro.net/fcm/insert_number.php";
+                    Log.i("removeNumber1",num);
+                    String link = "http://tripjuvo.ivyro.net/fcm/remove_number.php";
                     String data = URLEncoder.encode("number", "UTF-8") + "=" + URLEncoder.encode(num, "UTF-8");
 
                     URL url = new URL(link);
@@ -72,6 +69,7 @@ public class InsertNumber {
                     }
                     return sb.toString();
                 } catch (Exception e) {
+                    Log.i("removeNumber1",e.getMessage().toString());
                     return new String("Exception: " + e.getMessage());
 
                 }
@@ -82,3 +80,4 @@ public class InsertNumber {
         task.execute(number);
     }
 }
+
