@@ -43,7 +43,6 @@ public class MainActivity extends AppCompatActivity {
         });
         FirebaseMessaging.getInstance().subscribeToTopic("news");
         FirebaseInstanceId.getInstance().getToken();
-
     }
 
     @Override
@@ -81,7 +80,6 @@ public class MainActivity extends AppCompatActivity {
                 // Explain to the user why we need to write the permission.
                 Toast.makeText(this, "Read/Write external storage", Toast.LENGTH_SHORT).show();
             }
-
             requestPermissions(new String[]{android.Manifest.permission.SEND_SMS, android.Manifest.permission.SEND_SMS},
                     MY_PERMISSION_REQUEST_STORAGE);
 
@@ -89,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
             // app-defined int constant
 
         } else {
+
         }
     }
 }

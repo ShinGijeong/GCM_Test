@@ -32,6 +32,7 @@ public class Checknumber extends AppCompatActivity {
     ArrayList<String> arrayList = new ArrayList<>();
     ArrayAdapter<String> arrayAdapter;
     ListView list;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +54,7 @@ public class Checknumber extends AppCompatActivity {
         });
 
     }
+
     public void onClick(View v)
     {
         removeNumber rn = new removeNumber();
@@ -68,6 +70,7 @@ public class Checknumber extends AppCompatActivity {
             arrayAdapter.notifyDataSetChanged();
         }
     }
+
     public void showList()
     {
         phpDown task;
@@ -112,12 +115,10 @@ public class Checknumber extends AppCompatActivity {
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
-
             return jsonHtml.toString();
         }
 
         protected void onPostExecute(String str) {
-
             try {
                 JSONObject root = new JSONObject(str);
                 JSONArray ja = root.getJSONArray("results"); //get the JSONArray which I made in the php file. the name of JSONArray is "results"
@@ -137,6 +138,7 @@ public class Checknumber extends AppCompatActivity {
             inputList();
         }
     }
+
     public void inputList()
     {
         arrayAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_multiple_choice,arrayList);

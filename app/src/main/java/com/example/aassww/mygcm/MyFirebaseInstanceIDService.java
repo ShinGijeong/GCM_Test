@@ -34,7 +34,6 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
         class InsertData extends AsyncTask<String, Void, String> {
             ProgressDialog loading;
 
-
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
@@ -83,11 +82,8 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
                     Log.i("LLLL1",e.getMessage());
                     return new String("Exception: " + e.getMessage());
                 }
-
             }
-
         }
-
         InsertData task = new InsertData();
         task.execute(reg_id);
     }

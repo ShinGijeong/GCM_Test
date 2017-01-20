@@ -73,7 +73,6 @@ public class removeNumber {
                     return new String("Exception: " + e.getMessage());
 
                 }
-
             }
         }
         InsertData task = new InsertData();

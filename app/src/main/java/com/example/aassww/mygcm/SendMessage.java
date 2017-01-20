@@ -39,20 +39,19 @@ public class SendMessage extends AppCompatActivity {
 
         TextView textView = (TextView)findViewById(R.id.textView);
         textView.setText(data);
-
     }
 
     private void send(String num, String ms) {
         SmsManager smsManager = SmsManager.getDefault();
         smsManager.sendTextMessage(num, null, ms, null, null);
     }
+
     private class phpDown extends AsyncTask<String, Integer, String> {
         @Override
         protected String doInBackground(String... poi_id) {
             StringBuilder jsonHtml = new StringBuilder();
             try {
                 // 연결 url 설정String minorid = (String) params[0];
-
                 String link = "http://tripjuvo.ivyro.net/fcm/listPhonenumber.php";
                 //    String data = URLEncoder.encode("poi_id", "UTF-8") + "=" + URLEncoder.encode(poi_id[0], "UTF-8");
                 URL url = new URL(link);
@@ -61,7 +60,6 @@ public class SendMessage extends AppCompatActivity {
                 OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
                 //   wr.write(data);
                 wr.flush();
-
                 // 커넥션 객체 생성
                 // 연결되었으면.
                 if (conn != null) {
@@ -96,7 +94,6 @@ public class SendMessage extends AppCompatActivity {
                     String phone = jo.getString("phoneNumber");
                     Log.i("SENDSMS",data);
                     send(phone,data);
-
                 }
             }
             catch (JSONException e) {

@@ -19,10 +19,10 @@ import java.net.URLEncoder;
 
 public class InsertNumber {
 
-    public void sendToDatabase(String phone)
-    {
+    public void sendToDatabase(String phone) {
         insertToDatabase(phone);
     }
+
     private void insertToDatabase(String number) {
 
         class InsertData extends AsyncTask<String, Void, String> {
@@ -37,15 +37,13 @@ public class InsertNumber {
             @Override
             protected void onPostExecute(String s) {
                 super.onPostExecute(s);
-//                loading.dismiss();
+//              loading.dismiss();
                 //Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
             }
 
             @Override
             protected String doInBackground(String... params) {
-
                 try {
-
                     String num = (String) params[0];
 
                     String link = "http://tripjuvo.ivyro.net/fcm/insert_number.php";
@@ -71,7 +69,8 @@ public class InsertNumber {
                         break;
                     }
                     return sb.toString();
-                } catch (Exception e) {
+                }
+                catch (Exception e) {
                     return new String("Exception: " + e.getMessage());
 
                 }
