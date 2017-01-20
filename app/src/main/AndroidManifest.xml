@@ -28,6 +28,7 @@
         </service>
 
         <activity android:name=".Checknumber" />
+        <activity android:name=".SendMessage"></activity>
     </application>
 
 </manifest>

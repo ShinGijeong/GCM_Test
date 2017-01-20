@@ -28,9 +28,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         if (remoteMessage.getData().size() > 0) {
             Log.d(TAG, "Message data payload: " + remoteMessage.getData());
-            String body = remoteMessage.getNotification().getBody();
+            String body = remoteMessage.getData().put("","message");
             Log.d(TAG,"body = "+ body);
 
+            Intent intent = new Intent(this, SendMessage.class);
+            intent.putExtra("message",remoteMessage.getData().get("message"));
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
         }
 
         if (remoteMessage.getNotification() != null) {
