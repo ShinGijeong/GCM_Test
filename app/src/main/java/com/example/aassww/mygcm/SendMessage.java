@@ -1,17 +1,13 @@
 package com.example.aassww.mygcm;
 
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.WindowManager;
-import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.Manifest;
 
 import org.json.JSONArray;
 import org.json.JSONException;
