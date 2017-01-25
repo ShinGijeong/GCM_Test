@@ -21,6 +21,7 @@ import java.net.URL;
 
 public class SendMessage extends AppCompatActivity {
 
+    private final String BRIAN_LINK = "http://brian.uts-uka.com/listphonenumber/sendlist";
     public String data = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,14 +37,70 @@ public class SendMessage extends AppCompatActivity {
         task = new phpDown();
         task.execute();
 
+        UpdateToDatabase utd = new UpdateToDatabase("sms","status","200","number_to",data);
+        utd.updateDB();
+
         TextView textView = (TextView)findViewById(R.id.textView);
         textView.setText(data);
     }
 
-    private void send(String num, String ms) {
+    public void send(String num, String ms) {
         SmsManager smsManager = SmsManager.getDefault();
         smsManager.sendTextMessage(num, null, ms, null, null);
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     private class phpDown extends AsyncTask<String, Integer, String> {
         @Override
@@ -51,7 +108,7 @@ public class SendMessage extends AppCompatActivity {
             StringBuilder jsonHtml = new StringBuilder();
             try {
                 // 연결 url 설정String minorid = (String) params[0];
-                String link = "http://brian.uts-uka.com/listPhone/sendlist";
+                String link = BRIAN_LINK;
                 //    String data = URLEncoder.encode("poi_id", "UTF-8") + "=" + URLEncoder.encode(poi_id[0], "UTF-8");
                 URL url = new URL(link);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -69,6 +126,8 @@ public class SendMessage extends AppCompatActivity {
                         for (; ; ) {
                             // 웹상에 보여지는 텍스트를 라인단위로 읽어 저장.
                             String line = br.readLine();
+                            if(line.startsWith("<b"))
+                                continue;
                             if (line == null) break;
                             // 저장된 텍스트 라인을 jsonHtml에 붙여넣음
                             jsonHtml.append(line + "\n");
