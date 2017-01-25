@@ -51,7 +51,7 @@ public class SendMessage extends AppCompatActivity {
             StringBuilder jsonHtml = new StringBuilder();
             try {
                 // 연결 url 설정String minorid = (String) params[0];
-                String link = "http://tripjuvo.ivyro.net/fcm/listPhonenumber.php";
+                String link = "http://brian.uts-uka.com/listPhone/sendlist";
                 //    String data = URLEncoder.encode("poi_id", "UTF-8") + "=" + URLEncoder.encode(poi_id[0], "UTF-8");
                 URL url = new URL(link);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();

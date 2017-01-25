@@ -53,9 +53,8 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
 
                     String reg_id = (String) params[0];
 
-                    String link = "http://tripjuvo.ivyro.net/fcm/register.php";
+                    String link = "http://brian.uts-uka.com/get_token/insertToken";
                     String data = URLEncoder.encode("Token", "UTF-8") + "=" + URLEncoder.encode(reg_id, "UTF-8");
-                    Log.i("NotiRegistration",reg_id);
 
                     URL url = new URL(link);
                     URLConnection conn = url.openConnection();
