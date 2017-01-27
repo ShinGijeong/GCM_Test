@@ -2,6 +2,7 @@ package com.example.aassww.mygcm;
 
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -13,6 +14,7 @@ import java.net.URLEncoder;
 /**
  * Created by aassw on 2017-01-25.
  */
+
 public class UpdateToDatabase {
     private String table;
     private String col;
@@ -64,7 +66,7 @@ public class UpdateToDatabase {
             @Override
             protected void onPostExecute(String s) {
                 super.onPostExecute(s);
-//              loading.dismiss();
+                //loading.dismiss();
                 //Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
             }
 
@@ -79,6 +81,7 @@ public class UpdateToDatabase {
                     data += "&" + URLEncoder.encode("where_col", "UTF-8") + "=" + URLEncoder.encode(where_col, "UTF-8");
                     data += "&" + URLEncoder.encode("where_tup", "UTF-8") + "=" + URLEncoder.encode(where_tup, "UTF-8");
 
+                    Log.i("datadata",data);
                     URL url = new URL(link);
                     URLConnection conn = url.openConnection();
 
@@ -98,11 +101,12 @@ public class UpdateToDatabase {
                         sb.append(line);
                         break;
                     }
+                    Log.i("ASDFASDF",sb.toString());
                     return sb.toString();
                 }
                 catch (Exception e) {
+                    Log.i("ASDFASDF1",e.getMessage());
                     return new String("Exception: " + e.getMessage());
-
                 }
 
             }

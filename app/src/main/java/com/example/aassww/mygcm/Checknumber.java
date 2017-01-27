@@ -25,7 +25,6 @@ import java.util.ArrayList;
 public class Checknumber extends AppCompatActivity {
 
     private final String BRIAN_LINK = "http://brian.uts-uka.com/listphonenumber/sendlist";
-    private final String TRIP_LINK = "http://tripjuvo.ivyro.net/fcm/listPhonenumber.php";
 
     ArrayList<String> arrayList = new ArrayList<>();
     ArrayAdapter<String> arrayAdapter;

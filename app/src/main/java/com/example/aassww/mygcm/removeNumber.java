@@ -79,4 +79,3 @@ public class removeNumber {
         task.execute(number);
     }
 }
-

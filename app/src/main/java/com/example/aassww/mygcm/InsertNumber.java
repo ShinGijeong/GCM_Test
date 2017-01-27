@@ -65,9 +65,7 @@ public class InsertNumber {
                 }
                 catch (Exception e) {
                     return new String("Exception: " + e.getMessage());
-
                 }
-
             }
         }
         InsertData task = new InsertData();

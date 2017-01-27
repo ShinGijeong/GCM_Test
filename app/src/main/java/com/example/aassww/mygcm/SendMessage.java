@@ -39,7 +39,7 @@ public class SendMessage extends AppCompatActivity {
 
         UpdateToDatabase utd = new UpdateToDatabase("sms","status","200","number_to",data);
         utd.updateDB();
-
+        Log.i("SQL query","update sms set status = '200' where number_to = '"+data+"';");
         TextView textView = (TextView)findViewById(R.id.textView);
         textView.setText(data);
     }
@@ -47,60 +47,9 @@ public class SendMessage extends AppCompatActivity {
     public void send(String num, String ms) {
         SmsManager smsManager = SmsManager.getDefault();
         smsManager.sendTextMessage(num, null, ms, null, null);
+
+        Log.i("Send Number",num);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     private class phpDown extends AsyncTask<String, Integer, String> {
         @Override
@@ -141,6 +90,7 @@ public class SendMessage extends AppCompatActivity {
             }
             return jsonHtml.toString();
         }
+
         protected void onPostExecute(String str) {
             try {
                 JSONObject root = new JSONObject(str);
@@ -151,6 +101,7 @@ public class SendMessage extends AppCompatActivity {
 
                     String phone = jo.getString("phoneNumber");
                     Log.i("SENDSMS",data);
+                    Log.i("SENDSMS",phone);
                     send(phone,data);
                 }
             }
