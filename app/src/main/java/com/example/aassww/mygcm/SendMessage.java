@@ -18,6 +18,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 
 public class SendMessage extends AppCompatActivity {
 
@@ -35,11 +36,11 @@ public class SendMessage extends AppCompatActivity {
 
         phpDown task;
         task = new phpDown();
-        task.execute();
+        task.execute(data);
 
-        UpdateToDatabase utd = new UpdateToDatabase("sms","status","200","number_to",data);
+        UpdateToDatabase utd = new UpdateToDatabase("sms","status","200","content",data);
         utd.updateDB();
-        Log.i("SQL query","update sms set status = '200' where number_to = '"+data+"';");
+        Log.i("SQL query","update sms set status = '200' where content = '"+data+"';");
         TextView textView = (TextView)findViewById(R.id.textView);
         textView.setText(data);
     }
@@ -57,24 +58,30 @@ public class SendMessage extends AppCompatActivity {
             StringBuilder jsonHtml = new StringBuilder();
             try {
                 // 연결 url 설정String minorid = (String) params[0];
+                String msg = poi_id[0];
                 String link = BRIAN_LINK;
-                //    String data = URLEncoder.encode("poi_id", "UTF-8") + "=" + URLEncoder.encode(poi_id[0], "UTF-8");
+                String data2 = URLEncoder.encode("message", "UTF-8") + "=" + URLEncoder.encode(msg, "UTF-8");
+                Log.i("msgmsg",msg+"  "+data2);
                 URL url = new URL(link);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setDoOutput(true);
                 OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
-                //   wr.write(data);
+                Log.i("String line","String line");
+                wr.write(data2);
                 wr.flush();
                 // 커넥션 객체 생성
                 // 연결되었으면.
                 if (conn != null) {
+                    Log.i("String line1","String line1");
                     conn.setConnectTimeout(10000);
                     // 연결되었음 코드가 리턴되면.
                     if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                        Log.i("String line2","String line2");
                         BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
                         for (; ; ) {
                             // 웹상에 보여지는 텍스트를 라인단위로 읽어 저장.
                             String line = br.readLine();
+                            Log.i("String line3",br.readLine());
                             if(line.startsWith("<b"))
                                 continue;
                             if (line == null) break;
@@ -99,7 +106,7 @@ public class SendMessage extends AppCompatActivity {
                 for (int i = 0; i < ja.length(); i++) {
                     JSONObject jo = ja.getJSONObject(i);
 
-                    String phone = jo.getString("phoneNumber");
+                    String phone = jo.getString("number_to");
                     Log.i("SENDSMS",data);
                     Log.i("SENDSMS",phone);
                     send(phone,data);
