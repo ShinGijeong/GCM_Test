@@ -46,10 +46,13 @@ public class SendMessage extends AppCompatActivity {
     }
 
     public void send(String num, String ms) {
+
+        Log.i("Send MSG",ms);
+        Log.i("Send Number",num);
+
         SmsManager smsManager = SmsManager.getDefault();
         smsManager.sendTextMessage(num, null, ms, null, null);
 
-        Log.i("Send Number",num);
     }
 
     private class phpDown extends AsyncTask<String, Integer, String> {
@@ -76,12 +79,13 @@ public class SendMessage extends AppCompatActivity {
                     conn.setConnectTimeout(10000);
                     // 연결되었음 코드가 리턴되면.
                     if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                        Log.i("String line2","String line2");
+                        Log.i("Stringline2","String line2");
                         BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
+                        Log.i("Stringline84","String line84");
                         for (; ; ) {
                             // 웹상에 보여지는 텍스트를 라인단위로 읽어 저장.
                             String line = br.readLine();
-                            Log.i("String line3",br.readLine());
+                            Log.i("Stringline4", line);
                             if(line.startsWith("<b"))
                                 continue;
                             if (line == null) break;
@@ -93,6 +97,7 @@ public class SendMessage extends AppCompatActivity {
                     conn.disconnect();
                 }
             } catch (Exception ex) {
+                Log.i("Excepution line 100", ex.getMessage());
                 ex.printStackTrace();
             }
             return jsonHtml.toString();
