@@ -1,6 +1,11 @@
 package com.example.aassww.mygcm;
 
+import android.app.Activity;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,6 +13,7 @@ import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.WindowManager;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -24,6 +30,7 @@ public class SendMessage extends AppCompatActivity {
 
     private final String BRIAN_LINK = "http://brian.uts-uka.com/listphonenumber/sendlist";
     public String data = "";
+    public String g_sms_id = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,12 +54,48 @@ public class SendMessage extends AppCompatActivity {
     }
 
     public void send(String num, String ms) {
+        PendingIntent sentIntent = PendingIntent.getBroadcast(this, 0, new Intent("SMS_SENT_ACTION"), 0);
+        PendingIntent deliveredIntent = PendingIntent.getBroadcast(this, 0, new Intent("SMS_DELIVERED_ACTION"), 0);
+
+        registerReceiver(new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                InsertToDatabase itd;
+                switch(getResultCode()){
+                    case Activity.RESULT_OK:
+                        // 전송 성공
+                        itd = new InsertToDatabase(g_sms_id,"","200");
+                        Log.i("SMS status", "Send msg complete");
+                        break;
+                    case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
+                        // 전송 실패
+                        itd = new InsertToDatabase(g_sms_id,"","400");
+                        Log.i("SMS status", "Send msg fail");
+                        break;
+                    case SmsManager.RESULT_ERROR_NO_SERVICE:
+                        // 서비스 지역 아님
+                        itd = new InsertToDatabase(g_sms_id,"","400");
+                        Log.i("SMS status", "not service area");
+                        break;
+                    case SmsManager.RESULT_ERROR_RADIO_OFF:
+                        // 무선 꺼짐
+                        itd = new InsertToDatabase(g_sms_id,"","400");
+                        Log.i("SMS status", "turned off wireless");
+                        break;
+                    case SmsManager.RESULT_ERROR_NULL_PDU:
+                        // PDU 실패
+                        itd = new InsertToDatabase(g_sms_id,"","400");
+                        Log.i("SMS status", "PDU NULL");
+                        break;
+                }
+            }
+        }, new IntentFilter("SMS_SENT_ACTION"));
 
         Log.i("Send MSG",ms);
         Log.i("Send Number",num);
 
         SmsManager smsManager = SmsManager.getDefault();
-        smsManager.sendTextMessage(num, null, ms, null, null);
+        smsManager.sendTextMessage(num, null, ms, sentIntent, deliveredIntent);
 
     }
 
@@ -65,28 +108,31 @@ public class SendMessage extends AppCompatActivity {
                 String msg = poi_id[0];
                 String link = BRIAN_LINK;
                 String data2 = URLEncoder.encode("message", "UTF-8") + "=" + URLEncoder.encode(msg, "UTF-8");
+
                 Log.i("msgmsg",msg+"  "+data2);
+
                 URL url = new URL(link);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setDoOutput(true);
                 OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+
                 Log.i("String line","String line");
+
                 wr.write(data2);
                 wr.flush();
                 // 커넥션 객체 생성
                 // 연결되었으면.
                 if (conn != null) {
-                    Log.i("String line1","String line1");
                     conn.setConnectTimeout(10000);
                     // 연결되었음 코드가 리턴되면.
                     if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                        Log.i("Stringline2","String line2");
                         BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
-                        Log.i("Stringline84","String line84");
                         for (; ; ) {
                             // 웹상에 보여지는 텍스트를 라인단위로 읽어 저장.
                             String line = br.readLine();
+
                             Log.i("Stringline4", line);
+
                             if(line.startsWith("<b"))
                                 continue;
                             if (line == null) break;
@@ -113,8 +159,13 @@ public class SendMessage extends AppCompatActivity {
                     JSONObject jo = ja.getJSONObject(i);
 
                     String phone = jo.getString("number_to");
+                    String sms_id = jo.getString("sms_id");
+                    g_sms_id = sms_id;
+
                     Log.i("SENDSMS",data);
                     Log.i("SENDSMS",phone);
+                    Log.i("SENDSMS_id",sms_id);
+
                     send(phone,data);
                 }
             }

@@ -10,49 +10,61 @@ import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
- * Created by aassw on 2017-01-25.
+ * Created by aassw on 2017-01-30.
  */
 
-public class UpdateToDatabase {
+public class InsertToDatabase {
+    final String BRIAN_LINK = "http://brian.uts-uka.com/sms/add_sms_log";
+    private String sms_id;
+    private String date;
+    private String status;
 
-    private String table;
-    private String col;
-    private String tuple;
-    private String where_col;
-    private String where_tup;
+    public InsertToDatabase(String id, String d, String st) {
+        if(d == "") {
+            Calendar cal = Calendar.getInstance();
+            d = cal.get(Calendar.YEAR)+"-"+(cal.get(Calendar.MONTH)+1)+"-"+cal.get(Calendar.DATE)+" "+cal.get(Calendar.HOUR)+":"+cal.get(Calendar.MINUTE)+":"+cal.get(Calendar.SECOND);
+            setDate(d);
+        }
 
-    private final String BRIAN_LINK = "http://brian.uts-uka.com/sms/update_sms";
+        else
+            setDate(d);
 
-    public UpdateToDatabase(String table, String c, String t, String wc, String wt)
-    {
-        setTable(table);setCol(c);setTuple(t);setWhere_col(wc);setWhere_tup(wt);
-    }
-    public void setTable(String table) {
-        this.table = table;
-    }
+        setSms_id(id);
+        setStatus(st);
 
-    public void setCol(String col) {
-        this.col = col;
-    }
+        insertInSms_log();
 
-    public void setTuple(String tuple) {
-        this.tuple = tuple;
     }
 
-    public void setWhere_col(String where_col) {
-        this.where_col = where_col;
+    public String getSms_id() {
+        return sms_id;
     }
 
-    public void setWhere_tup(String where_tup) {
-        this.where_tup = where_tup;
-    }
-    public void updateDB() {
-        update();
+    public String getDate() {
+        return date;
     }
 
-    private void update() {
+    public String getStatus() {
+        return status;
+    }
+
+    public void setSms_id(String sms_id) {
+        this.sms_id = sms_id;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    private void insertInSms_log() {
 
         class InsertData extends AsyncTask<String, Void, String> {
             ProgressDialog loading;
@@ -75,13 +87,11 @@ public class UpdateToDatabase {
                 try {
 
                     String link = BRIAN_LINK;
+                    String data = URLEncoder.encode("sms_id", "UTF-8") + "=" + URLEncoder.encode(sms_id, "UTF-8");
+                    data += "&" + URLEncoder.encode("status", "UTF-8") + "=" + URLEncoder.encode(status, "UTF-8");
+                    data += "&" + URLEncoder.encode("reg_date", "UTF-8") + "=" + URLEncoder.encode(date, "UTF-8");
 
-                    String data = URLEncoder.encode("table", "UTF-8") + "=" + URLEncoder.encode(table, "UTF-8");
-                    data += "&" + URLEncoder.encode("col", "UTF-8") + "=" + URLEncoder.encode(col, "UTF-8");
-                    data += "&" + URLEncoder.encode("tuple", "UTF-8") + "=" + URLEncoder.encode(tuple, "UTF-8");
-                    data += "&" + URLEncoder.encode("where_col", "UTF-8") + "=" + URLEncoder.encode(where_col, "UTF-8");
-                    data += "&" + URLEncoder.encode("where_tup", "UTF-8") + "=" + URLEncoder.encode(where_tup, "UTF-8");
-
+                    Log.i("datadata",data);
                     URL url = new URL(link);
                     URLConnection conn = url.openConnection();
 

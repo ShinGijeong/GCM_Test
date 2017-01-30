@@ -72,7 +72,6 @@ public class MainActivity extends AppCompatActivity {
             requestPermissions(new String[]{android.Manifest.permission.SEND_SMS, android.Manifest.permission.SEND_SMS},
                     MY_PERMISSION_REQUEST_STORAGE);
 
-
         } else {
 
         }
