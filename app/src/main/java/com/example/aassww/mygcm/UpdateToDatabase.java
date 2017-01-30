@@ -16,6 +16,7 @@ import java.net.URLEncoder;
  */
 
 public class UpdateToDatabase {
+
     private String table;
     private String col;
     private String tuple;
@@ -47,8 +48,7 @@ public class UpdateToDatabase {
     public void setWhere_tup(String where_tup) {
         this.where_tup = where_tup;
     }
-    public void updateDB()
-    {
+    public void updateDB() {
         update();
     }
 
