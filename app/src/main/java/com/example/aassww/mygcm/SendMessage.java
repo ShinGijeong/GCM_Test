@@ -24,6 +24,7 @@ public class SendMessage extends AppCompatActivity {
 
     private final String BRIAN_LINK = "http://brian.uts-uka.com/listphonenumber/sendlist";
     public String data = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

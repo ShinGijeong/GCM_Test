@@ -108,7 +108,6 @@ public class UpdateToDatabase {
                     Log.i("ASDFASDF1",e.getMessage());
                     return new String("Exception: " + e.getMessage());
                 }
-
             }
         }
         InsertData task = new InsertData();
