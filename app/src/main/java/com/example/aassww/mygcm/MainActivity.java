@@ -24,19 +24,11 @@ public class MainActivity extends AppCompatActivity {
         checkPermission();
 
         Button getTokenButton = (Button) findViewById(R.id.checkTokenButton);
-        Button reviseButton = (Button) findViewById(R.id.reviseNumber);
         getTokenButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 MyFirebaseInstanceIDService service = new MyFirebaseInstanceIDService();
                 service.onTokenRefresh();
-            }
-        });
-        reviseButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, Checknumber.class);
-                startActivity(intent);
             }
         });
         FirebaseMessaging.getInstance().subscribeToTopic("news");
@@ -81,8 +73,6 @@ public class MainActivity extends AppCompatActivity {
             requestPermissions(new String[]{android.Manifest.permission.SEND_SMS, android.Manifest.permission.SEND_SMS},
                     MY_PERMISSION_REQUEST_STORAGE);
 
-            // MY_PERMISSION_REQUEST_STORAGE is an
-            // app-defined int constant
 
         } else {
 
