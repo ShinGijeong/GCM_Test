@@ -58,36 +58,38 @@ public class SendMessage extends AppCompatActivity {
         PendingIntent deliveredIntent = PendingIntent.getBroadcast(this, 0, new Intent("SMS_DELIVERED_ACTION"), 0);
 
         registerReceiver(new BroadcastReceiver() {
+
             @Override
             public void onReceive(Context context, Intent intent) {
-                InsertToDatabase itd;
+                InsertToDatabase itd = new InsertToDatabase(g_sms_id,"","");
                 switch(getResultCode()){
                     case Activity.RESULT_OK:
                         // 전송 성공
-                        itd = new InsertToDatabase(g_sms_id,"","200");
+                        itd.setStatus("200");
                         Log.i("SMS status", "Send msg complete");
                         break;
                     case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
                         // 전송 실패
-                        itd = new InsertToDatabase(g_sms_id,"","400");
+                        itd.setStatus("400");
                         Log.i("SMS status", "Send msg fail");
                         break;
                     case SmsManager.RESULT_ERROR_NO_SERVICE:
                         // 서비스 지역 아님
-                        itd = new InsertToDatabase(g_sms_id,"","400");
+                        itd.setStatus("400");
                         Log.i("SMS status", "not service area");
                         break;
                     case SmsManager.RESULT_ERROR_RADIO_OFF:
                         // 무선 꺼짐
-                        itd = new InsertToDatabase(g_sms_id,"","400");
+                        itd.setStatus("400");
                         Log.i("SMS status", "turned off wireless");
                         break;
                     case SmsManager.RESULT_ERROR_NULL_PDU:
                         // PDU 실패
-                        itd = new InsertToDatabase(g_sms_id,"","400");
+                        itd.setStatus("400");
                         Log.i("SMS status", "PDU NULL");
                         break;
                 }
+                itd.insertInSms_log();
             }
         }, new IntentFilter("SMS_SENT_ACTION"));
 

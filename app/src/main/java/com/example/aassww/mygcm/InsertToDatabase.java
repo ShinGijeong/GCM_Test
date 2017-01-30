@@ -26,7 +26,7 @@ public class InsertToDatabase {
     public InsertToDatabase(String id, String d, String st) {
         if(d == "") {
             Calendar cal = Calendar.getInstance();
-            d = cal.get(Calendar.YEAR)+"-"+(cal.get(Calendar.MONTH)+1)+"-"+cal.get(Calendar.DATE)+" "+cal.get(Calendar.HOUR)+":"+cal.get(Calendar.MINUTE)+":"+cal.get(Calendar.SECOND);
+            d = cal.get(Calendar.YEAR)+"-"+(cal.get(Calendar.MONTH)+1)+"-"+cal.get(Calendar.DATE)+" "+cal.get(Calendar.HOUR_OF_DAY)+":"+cal.get(Calendar.MINUTE)+":"+cal.get(Calendar.SECOND);
             setDate(d);
         }
 
@@ -35,8 +35,6 @@ public class InsertToDatabase {
 
         setSms_id(id);
         setStatus(st);
-
-        insertInSms_log();
 
     }
 
@@ -64,7 +62,7 @@ public class InsertToDatabase {
         this.status = status;
     }
 
-    private void insertInSms_log() {
+    public void insertInSms_log() {
 
         class InsertData extends AsyncTask<String, Void, String> {
             ProgressDialog loading;
