@@ -14,7 +14,6 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
-
     private static final String TAG = "MyFirebaseMsgService";
 
     @Override
@@ -70,5 +69,4 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public static boolean isScreenOn(Context context) {
         return ((PowerManager)context.getSystemService(Context.POWER_SERVICE)).isScreenOn();
     }
-
 }

@@ -22,8 +22,11 @@ public class InsertToDatabase {
     private String sms_id;
     private String date;
     private String status;
+    private String sms_forward_id;
 
-    public InsertToDatabase(String id, String d, String st) {
+
+
+    public InsertToDatabase(String id, String sfi, String d, String st) {
         if(d == "") {
             Calendar cal = Calendar.getInstance();
             d = cal.get(Calendar.YEAR)+"-"+(cal.get(Calendar.MONTH)+1)+"-"+cal.get(Calendar.DATE)+" "+cal.get(Calendar.HOUR_OF_DAY)+":"+cal.get(Calendar.MINUTE)+":"+cal.get(Calendar.SECOND);
@@ -35,6 +38,7 @@ public class InsertToDatabase {
 
         setSms_id(id);
         setStatus(st);
+        setSms_forward_id(sfi);
 
     }
 
@@ -49,7 +53,13 @@ public class InsertToDatabase {
     public String getStatus() {
         return status;
     }
+    public String getSms_forward_id() {
+        return sms_forward_id;
+    }
 
+    public void setSms_forward_id(String sms_forward_id) {
+        this.sms_forward_id = sms_forward_id;
+    }
     public void setSms_id(String sms_id) {
         this.sms_id = sms_id;
     }
@@ -86,8 +96,10 @@ public class InsertToDatabase {
 
                     String link = BRIAN_LINK;
                     String data = URLEncoder.encode("sms_id", "UTF-8") + "=" + URLEncoder.encode(sms_id, "UTF-8");
+                    data += "&" + URLEncoder.encode("sms_forward_id", "UTF-8") + "=" + URLEncoder.encode(sms_forward_id, "UTF-8");
                     data += "&" + URLEncoder.encode("status", "UTF-8") + "=" + URLEncoder.encode(status, "UTF-8");
                     data += "&" + URLEncoder.encode("reg_date", "UTF-8") + "=" + URLEncoder.encode(date, "UTF-8");
+
 
                     Log.i("datadata",data);
                     URL url = new URL(link);

@@ -3,14 +3,34 @@ package com.example.aassww.mygcm;
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.IntentSender;
+import android.content.ServiceConnection;
+import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
+import android.content.res.AssetManager;
+import android.content.res.Configuration;
+import android.content.res.Resources;
+import android.database.DatabaseErrorHandler;
+import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.UserHandle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.telephony.SmsManager;
 import android.util.Log;
+import android.view.Display;
 import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,6 +40,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
@@ -49,11 +75,18 @@ public class SendMessage extends AppCompatActivity {
         UpdateToDatabase utd = new UpdateToDatabase("sms","status","200","content",data);
         utd.updateDB();
         Log.i("SQL query","update sms set status = '200' where content = '"+data+"';");
+
         TextView textView = (TextView)findViewById(R.id.textView);
         textView.setText(data);
+
+//        try {
+//            Thread.sleep(5000);
+//            finish();
+//        }
+//        catch (Exception e){}
     }
 
-    public void send(String num, String ms) {
+    public void send(String num, String ms, final String forward_id) {
         PendingIntent sentIntent = PendingIntent.getBroadcast(this, 0, new Intent("SMS_SENT_ACTION"), 0);
         PendingIntent deliveredIntent = PendingIntent.getBroadcast(this, 0, new Intent("SMS_DELIVERED_ACTION"), 0);
 
@@ -61,7 +94,7 @@ public class SendMessage extends AppCompatActivity {
 
             @Override
             public void onReceive(Context context, Intent intent) {
-                InsertToDatabase itd = new InsertToDatabase(g_sms_id,"","");
+                InsertToDatabase itd = new InsertToDatabase(g_sms_id,forward_id,"","");
                 switch(getResultCode()){
                     case Activity.RESULT_OK:
                         // 전송 성공
@@ -162,13 +195,10 @@ public class SendMessage extends AppCompatActivity {
 
                     String phone = jo.getString("number_to");
                     String sms_id = jo.getString("sms_id");
+                    String forward_id = jo.getString("sms_forward_id");
                     g_sms_id = sms_id;
 
-                    Log.i("SENDSMS",data);
-                    Log.i("SENDSMS",phone);
-                    Log.i("SENDSMS_id",sms_id);
-
-                    send(phone,data);
+                    send(phone,data,forward_id);
                 }
             }
             catch (JSONException e) {
