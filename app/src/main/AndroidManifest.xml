@@ -31,7 +31,11 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".SendMessage"></activity>
+        <activity
+            android:name=".SendMessage"
+            android:theme="@android:style/Theme.DeviceDefault.Light.Dialog">
+
+        </activity>
     </application>
 
 </manifest>

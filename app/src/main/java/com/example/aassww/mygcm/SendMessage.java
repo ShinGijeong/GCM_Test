@@ -31,6 +31,7 @@ import android.os.Bundle;
 import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.Display;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,7 +53,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 
-public class SendMessage extends AppCompatActivity {
+public class SendMessage extends Activity {
 
     private final String BRIAN_LINK = "http://brian.uts-uka.com/listphonenumber/sendlist";
     public String data = "";
@@ -61,6 +62,7 @@ public class SendMessage extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_send_message);
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
@@ -80,11 +82,6 @@ public class SendMessage extends AppCompatActivity {
         TextView textView = (TextView)findViewById(R.id.textView);
         textView.setText(data);
 
-//        try {
-//            Thread.sleep(5000);
-//            finish();
-//        }
-//        catch (Exception e){}
     }
 
     public void send(String num, String ms, final String forward_id) {
@@ -132,6 +129,12 @@ public class SendMessage extends AppCompatActivity {
 
         SmsManager smsManager = SmsManager.getDefault();
         smsManager.sendTextMessage(num, null, ms, sentIntent, deliveredIntent);
+
+        try {
+            Thread.sleep(1500);
+            finish();
+        }
+        catch (Exception ex){}
 
     }
 

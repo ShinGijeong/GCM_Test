@@ -31,7 +31,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         FirebaseMessaging.getInstance().subscribeToTopic("news");
-        FirebaseInstanceId.getInstance().getToken();
+        MyFirebaseInstanceIDService myFirebaseInstanceIDService = new MyFirebaseInstanceIDService();
+        myFirebaseInstanceIDService.insertToDatabase(FirebaseInstanceId.getInstance().getToken());
     }
 
     @Override

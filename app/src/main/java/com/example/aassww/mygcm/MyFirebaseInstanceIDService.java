@@ -28,7 +28,7 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
         insertToDatabase(refreshedToken);
     }
 
-    private void insertToDatabase(String reg_id) {
+    public void insertToDatabase(String reg_id) {
 
         class InsertData extends AsyncTask<String, Void, String> {
             ProgressDialog loading;
