@@ -25,12 +25,14 @@ import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.UserHandle;
+import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.Display;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
@@ -83,58 +85,89 @@ public class SendMessage extends Activity {
         textView.setText(data);
 
     }
+    public void onClick(View v)
+    {
+
+        finish();
+    }
+    @Override
+    protected void onDestroy()
+    {
+         super.onDestroy();
+    }
+
 
     public void send(String num, String ms, final String forward_id) {
+
         PendingIntent sentIntent = PendingIntent.getBroadcast(this, 0, new Intent("SMS_SENT_ACTION"), 0);
         PendingIntent deliveredIntent = PendingIntent.getBroadcast(this, 0, new Intent("SMS_DELIVERED_ACTION"), 0);
-
-        registerReceiver(new BroadcastReceiver() {
-
+        BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+            int a;
             @Override
             public void onReceive(Context context, Intent intent) {
-                InsertToDatabase itd = new InsertToDatabase(g_sms_id,forward_id,"","");
+                Log.i("hahahaha","hahaha");
                 switch(getResultCode()){
                     case Activity.RESULT_OK:
                         // 전송 성공
-                        itd.setStatus("200");
                         Log.i("SMS status", "Send msg complete");
                         break;
                     case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
                         // 전송 실패
-                        itd.setStatus("400");
                         Log.i("SMS status", "Send msg fail");
                         break;
                     case SmsManager.RESULT_ERROR_NO_SERVICE:
                         // 서비스 지역 아님
-                        itd.setStatus("400");
                         Log.i("SMS status", "not service area");
                         break;
                     case SmsManager.RESULT_ERROR_RADIO_OFF:
                         // 무선 꺼짐
-                        itd.setStatus("400");
                         Log.i("SMS status", "turned off wireless");
                         break;
                     case SmsManager.RESULT_ERROR_NULL_PDU:
                         // PDU 실패
-                        itd.setStatus("400");
                         Log.i("SMS status", "PDU NULL");
                         break;
                 }
-                itd.insertInSms_log();
             }
-        }, new IntentFilter("SMS_SENT_ACTION"));
+        };
 
+        registerReceiver(broadcastReceiver,new IntentFilter("SMS_SENT_ACTION"));
+
+        int status = 0;
+        switch(broadcastReceiver.getResultCode()){
+            case Activity.RESULT_OK:
+                // 전송 성공
+                status = 200;
+                break;
+            case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
+                // 전송 실패
+                status = 400;
+                break;
+            case SmsManager.RESULT_ERROR_NO_SERVICE:
+                // 서비스 지역 아님
+                status = 400;
+                break;
+            case SmsManager.RESULT_ERROR_RADIO_OFF:
+                // 무선 꺼짐
+                status = 400;
+                break;
+            case SmsManager.RESULT_ERROR_NULL_PDU:
+                // PDU 실패
+                status = 400;
+                break;
+        }
+
+        Log.i("STATUSIS",status+"");
+        InsertToDatabase itd = new InsertToDatabase(g_sms_id,forward_id,Integer.toString(status),"");
+
+        itd.insertInSms_log();
         Log.i("Send MSG",ms);
         Log.i("Send Number",num);
 
         SmsManager smsManager = SmsManager.getDefault();
         smsManager.sendTextMessage(num, null, ms, sentIntent, deliveredIntent);
 
-        try {
-            Thread.sleep(1500);
-            finish();
-        }
-        catch (Exception ex){}
+        unregisterReceiver(broadcastReceiver);
 
     }
 

@@ -11,7 +11,6 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 public class MainActivity extends AppCompatActivity {
-
     public final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 1;
     public final int MY_PERMISSION_REQUEST_STORAGE = 1;
 
