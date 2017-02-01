@@ -72,8 +72,9 @@ public class SendMessage extends AppCompatActivity {
         task = new phpDown();
         task.execute(data);
 
-        UpdateToDatabase utd = new UpdateToDatabase("sms","status","200","content",data);
-        utd.updateDB();
+//        UpdateToDatabase utd = new UpdateToDatabase("sms","status","200","content",data);
+//        utd.updateDB();
+
         Log.i("SQL query","update sms set status = '200' where content = '"+data+"';");
 
         TextView textView = (TextView)findViewById(R.id.textView);
@@ -190,6 +191,8 @@ public class SendMessage extends AppCompatActivity {
                 JSONObject root = new JSONObject(str);
                 JSONArray ja = root.getJSONArray("results"); //get the JSONArray which I made in the php file. the name of JSONArray is "results"
 
+                Log.i("HAAH",ja.length()+"");
+
                 for (int i = 0; i < ja.length(); i++) {
                     JSONObject jo = ja.getJSONObject(i);
 
@@ -197,6 +200,8 @@ public class SendMessage extends AppCompatActivity {
                     String sms_id = jo.getString("sms_id");
                     String forward_id = jo.getString("sms_forward_id");
                     g_sms_id = sms_id;
+
+                    Log.i("HAAH1",phone + sms_id + forward_id);
 
                     send(phone,data,forward_id);
                 }
