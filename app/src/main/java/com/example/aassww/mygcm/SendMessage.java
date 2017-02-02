@@ -54,12 +54,46 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 
 public class SendMessage extends Activity {
 
     private final String BRIAN_LINK = "http://brian.uts-uka.com/listphonenumber/sendlist";
-    public String data = "";
-    public String g_sms_id = "";
+    String data = "";
+    String g_sms_id = "";
+    ArrayList<String>forward_ids = new ArrayList<String>();
+    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            switch(getResultCode()){
+                case Activity.RESULT_OK:
+                    // 전송 성공
+                    insert(200);
+                    Log.i("SMS status", "Send msg complete");
+                    break;
+                case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
+                    // 전송 실패
+                    insert(400);
+                    Log.i("SMS status", "Send msg fail");
+                    break;
+                case SmsManager.RESULT_ERROR_NO_SERVICE:
+                    // 서비스 지역 아님
+                    insert(400);
+                    Log.i("SMS status", "not service area");
+                    break;
+                case SmsManager.RESULT_ERROR_RADIO_OFF:
+                    // 무선 꺼짐
+                    insert(400);
+                    Log.i("SMS status", "turned off wireless");
+                    break;
+                case SmsManager.RESULT_ERROR_NULL_PDU:
+                    // PDU 실패
+                    insert(400);
+                    Log.i("SMS status", "PDU NULL");
+                    break;
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,89 +119,38 @@ public class SendMessage extends Activity {
         textView.setText(data);
 
     }
+    public void insert(int num)
+    {
+        Log.i("SETINT",""+num);
+        for(int i = 0; i<forward_ids.size();i++) {
+            InsertToDatabase itd;
+            itd = new InsertToDatabase(g_sms_id, forward_ids.get(i), Integer.toString(num), "");
+            itd.insertInSms_log();
+        }
+        forward_ids.clear();
+    }
     public void onClick(View v)
     {
-
         finish();
     }
     @Override
     protected void onDestroy()
     {
-         super.onDestroy();
+        super.onDestroy();
+        unregisterReceiver(broadcastReceiver);
     }
 
-
-    public void send(String num, String ms, final String forward_id) {
-
+    public void send(String num, String ms) {
         PendingIntent sentIntent = PendingIntent.getBroadcast(this, 0, new Intent("SMS_SENT_ACTION"), 0);
         PendingIntent deliveredIntent = PendingIntent.getBroadcast(this, 0, new Intent("SMS_DELIVERED_ACTION"), 0);
-        BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-            int a;
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                Log.i("hahahaha","hahaha");
-                switch(getResultCode()){
-                    case Activity.RESULT_OK:
-                        // 전송 성공
-                        Log.i("SMS status", "Send msg complete");
-                        break;
-                    case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
-                        // 전송 실패
-                        Log.i("SMS status", "Send msg fail");
-                        break;
-                    case SmsManager.RESULT_ERROR_NO_SERVICE:
-                        // 서비스 지역 아님
-                        Log.i("SMS status", "not service area");
-                        break;
-                    case SmsManager.RESULT_ERROR_RADIO_OFF:
-                        // 무선 꺼짐
-                        Log.i("SMS status", "turned off wireless");
-                        break;
-                    case SmsManager.RESULT_ERROR_NULL_PDU:
-                        // PDU 실패
-                        Log.i("SMS status", "PDU NULL");
-                        break;
-                }
-            }
-        };
 
         registerReceiver(broadcastReceiver,new IntentFilter("SMS_SENT_ACTION"));
 
-        int status = 0;
-        switch(broadcastReceiver.getResultCode()){
-            case Activity.RESULT_OK:
-                // 전송 성공
-                status = 200;
-                break;
-            case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
-                // 전송 실패
-                status = 400;
-                break;
-            case SmsManager.RESULT_ERROR_NO_SERVICE:
-                // 서비스 지역 아님
-                status = 400;
-                break;
-            case SmsManager.RESULT_ERROR_RADIO_OFF:
-                // 무선 꺼짐
-                status = 400;
-                break;
-            case SmsManager.RESULT_ERROR_NULL_PDU:
-                // PDU 실패
-                status = 400;
-                break;
-        }
-
-        Log.i("STATUSIS",status+"");
-        InsertToDatabase itd = new InsertToDatabase(g_sms_id,forward_id,Integer.toString(status),"");
-
-        itd.insertInSms_log();
         Log.i("Send MSG",ms);
         Log.i("Send Number",num);
 
         SmsManager smsManager = SmsManager.getDefault();
         smsManager.sendTextMessage(num, null, ms, sentIntent, deliveredIntent);
-
-        unregisterReceiver(broadcastReceiver);
 
     }
 
@@ -236,10 +219,10 @@ public class SendMessage extends Activity {
                     String sms_id = jo.getString("sms_id");
                     String forward_id = jo.getString("sms_forward_id");
                     g_sms_id = sms_id;
-
+                    forward_ids.add(forward_id);
                     Log.i("HAAH1",phone + sms_id + forward_id);
 
-                    send(phone,data,forward_id);
+                    send(phone,data);
                 }
             }
             catch (JSONException e) {
