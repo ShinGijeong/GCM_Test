@@ -100,11 +100,10 @@ public class UpdateToDatabase {
                         sb.append(line);
                         break;
                     }
-                    Log.i("ASDFASDF",sb.toString());
+
                     return sb.toString();
                 }
                 catch (Exception e) {
-                    Log.i("ASDFASDF1",e.getMessage());
                     return new String("Exception: " + e.getMessage());
                 }
             }

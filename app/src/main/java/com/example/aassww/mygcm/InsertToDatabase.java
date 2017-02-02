@@ -97,8 +97,6 @@ public class InsertToDatabase {
                     data += "&" + URLEncoder.encode("status", "UTF-8") + "=" + URLEncoder.encode(status, "UTF-8");
                     data += "&" + URLEncoder.encode("reg_date", "UTF-8") + "=" + URLEncoder.encode(date, "UTF-8");
 
-
-                    Log.i("datadata",data);
                     URL url = new URL(link);
                     URLConnection conn = url.openConnection();
 
@@ -118,11 +116,10 @@ public class InsertToDatabase {
                         sb.append(line);
                         break;
                     }
-                    Log.i("ASDFASDF",sb.toString());
                     return sb.toString();
                 }
                 catch (Exception e) {
-                    Log.i("ASDFASDF1",e.getMessage());
+
                     return new String("Exception: " + e.getMessage());
                 }
             }

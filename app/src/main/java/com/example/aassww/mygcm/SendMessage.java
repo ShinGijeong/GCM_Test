@@ -110,18 +110,12 @@ public class SendMessage extends Activity {
         task = new phpDown();
         task.execute(data);
 
-//        UpdateToDatabase utd = new UpdateToDatabase("sms","status","200","content",data);
-//        utd.updateDB();
-
-        Log.i("SQL query","update sms set status = '200' where content = '"+data+"';");
-
         TextView textView = (TextView)findViewById(R.id.textView);
         textView.setText(data);
 
     }
     public void insert(int num)
     {
-        Log.i("SETINT",""+num);
         for(int i = 0; i<forward_ids.size();i++) {
             InsertToDatabase itd;
             itd = new InsertToDatabase(g_sms_id, forward_ids.get(i), Integer.toString(num), "");
@@ -146,9 +140,6 @@ public class SendMessage extends Activity {
 
         registerReceiver(broadcastReceiver,new IntentFilter("SMS_SENT_ACTION"));
 
-        Log.i("Send MSG",ms);
-        Log.i("Send Number",num);
-
         SmsManager smsManager = SmsManager.getDefault();
         smsManager.sendTextMessage(num, null, ms, sentIntent, deliveredIntent);
 
@@ -162,18 +153,14 @@ public class SendMessage extends Activity {
                 // 연결 url 설정String minorid = (String) params[0];
                 String msg = poi_id[0];
                 String link = BRIAN_LINK;
-                String data2 = URLEncoder.encode("message", "UTF-8") + "=" + URLEncoder.encode(msg, "UTF-8");
-
-                Log.i("msgmsg",msg+"  "+data2);
+                String message = URLEncoder.encode("message", "UTF-8") + "=" + URLEncoder.encode(msg, "UTF-8");
 
                 URL url = new URL(link);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setDoOutput(true);
                 OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
 
-                Log.i("String line","String line");
-
-                wr.write(data2);
+                wr.write(message);
                 wr.flush();
                 // 커넥션 객체 생성
                 // 연결되었으면.
@@ -199,7 +186,6 @@ public class SendMessage extends Activity {
                     conn.disconnect();
                 }
             } catch (Exception ex) {
-                Log.i("Excepution line 100", ex.getMessage());
                 ex.printStackTrace();
             }
             return jsonHtml.toString();
@@ -210,8 +196,6 @@ public class SendMessage extends Activity {
                 JSONObject root = new JSONObject(str);
                 JSONArray ja = root.getJSONArray("results"); //get the JSONArray which I made in the php file. the name of JSONArray is "results"
 
-                Log.i("HAAH",ja.length()+"");
-
                 for (int i = 0; i < ja.length(); i++) {
                     JSONObject jo = ja.getJSONObject(i);
 
@@ -220,7 +204,6 @@ public class SendMessage extends Activity {
                     String forward_id = jo.getString("sms_forward_id");
                     g_sms_id = sms_id;
                     forward_ids.add(forward_id);
-                    Log.i("HAAH1",phone + sms_id + forward_id);
 
                     send(phone,data);
                 }

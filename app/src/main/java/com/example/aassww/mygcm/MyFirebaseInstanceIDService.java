@@ -77,7 +77,6 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
                     }
                     return sb.toString();
                 } catch (Exception e) {
-                    Log.i("LLLL1",e.getMessage());
                     return new String("Exception: " + e.getMessage());
                 }
             }
