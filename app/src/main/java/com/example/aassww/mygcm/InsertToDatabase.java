@@ -18,6 +18,7 @@ import java.util.Date;
  */
 
 public class InsertToDatabase {
+
     final String BRIAN_LINK = "http://brian.uts-uka.com/sms/add_sms_log";
     private String sms_id;
     private String date;

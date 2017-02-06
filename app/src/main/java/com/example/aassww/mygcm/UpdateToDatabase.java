@@ -16,6 +16,7 @@ import java.net.URLEncoder;
  */
 
 public class UpdateToDatabase {
+
     private String table;
     private String col;
     private String tuple;

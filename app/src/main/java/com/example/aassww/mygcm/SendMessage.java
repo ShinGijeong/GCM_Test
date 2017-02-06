@@ -3,52 +3,23 @@ package com.example.aassww.mygcm;
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.IntentSender;
-import android.content.ServiceConnection;
-import android.content.SharedPreferences;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
-import android.content.res.AssetManager;
-import android.content.res.Configuration;
-import android.content.res.Resources;
-import android.database.DatabaseErrorHandler;
-import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.UserHandle;
-import android.provider.ContactsContract;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.telephony.SmsManager;
 import android.util.Log;
-import android.view.Display;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
@@ -57,7 +28,6 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 
 public class SendMessage extends Activity {
-
     private final String BRIAN_LINK = "http://brian.uts-uka.com/listphonenumber/sendlist";
     String data = "";
     String g_sms_id = "";
@@ -125,13 +95,13 @@ public class SendMessage extends Activity {
     }
     public void onClick(View v)
     {
+        unregisterReceiver(broadcastReceiver);
         finish();
     }
     @Override
     protected void onDestroy()
     {
         super.onDestroy();
-        unregisterReceiver(broadcastReceiver);
     }
 
     public void send(String num, String ms) {
@@ -172,11 +142,10 @@ public class SendMessage extends Activity {
                         for (; ; ) {
                             // 웹상에 보여지는 텍스트를 라인단위로 읽어 저장.
                             String line = br.readLine();
+                            Log.i("Stringline", line);
 
-                            Log.i("Stringline4", line);
+                            if(line.startsWith("<b")) continue;
 
-                            if(line.startsWith("<b"))
-                                continue;
                             if (line == null) break;
                             // 저장된 텍스트 라인을 jsonHtml에 붙여넣음
                             jsonHtml.append(line + "\n");
@@ -202,6 +171,7 @@ public class SendMessage extends Activity {
                     String phone = jo.getString("number_to");
                     String sms_id = jo.getString("sms_id");
                     String forward_id = jo.getString("sms_forward_id");
+
                     g_sms_id = sms_id;
                     forward_ids.add(forward_id);
 
